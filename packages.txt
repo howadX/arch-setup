@@ -148,7 +148,7 @@ nvidia-utils
 nvidia-settings
 nvidia-dkms
 libvdpau
-libva-vdpau-driver
+#libva-vdpau-driver
 vulkan-icd-loader
 vulkan-tools
 vulkan-validation-layers
