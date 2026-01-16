@@ -121,7 +121,6 @@ kubectl
 minikube
 helm
 terraform
-postman-bin
 insomnia
 
 # --- Graphics / Wayland / KDE ---
