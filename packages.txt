@@ -22,6 +22,18 @@ rsync
 screen
 tmux
 unrar
+file
+bat
+ripgrep
+fd
+fzf
+tree
+jq
+yq
+neofetch
+speedtest-cli
+btop
+exiftool
 
 # --- Networking / System ---
 NetworkManager
@@ -32,6 +44,8 @@ openssh
 nmap
 wireguard-tools
 resolvconf
+torbrowser-launcher
+amnezia-vpn
 
 # --- Disk / File Systems ---
 btrfs-progs
@@ -40,6 +54,9 @@ exfat-utils
 ntfs-3g
 gvfs
 udisks2
+timeshift
+rsnapshot
+bleachbit
 
 # --- Development Tools ---
 base-devel
@@ -58,13 +75,11 @@ lldb
 cmake-gui
 python-pip
 python-virtualenv
+python-wheel
+python-setuptools
 
 # --- Languages ---
 python
-python-pip
-python-virtualenv
-python-wheel
-python-setuptools
 go
 golang-tools
 openjdk
@@ -79,6 +94,8 @@ code-server
 kate
 kdevelop
 gvim
+alacritty
+kitty
 
 # --- C++ / AI / Math Libraries ---
 eigen
@@ -103,6 +120,12 @@ libvirt
 vde2
 bridge-utils
 virt-viewer
+kubectl
+minikube
+helm
+terraform
+postman-bin
+insomnia
 
 # --- Graphics / Wayland / KDE ---
 plasma
@@ -119,6 +142,9 @@ wl-clipboard
 wdisplays
 khotkeys
 kdeconnect
+rofi
+dmenu
+cursor
 
 # --- NVIDIA Drivers ---
 nvidia
@@ -148,7 +174,10 @@ gst-plugins-bad
 gst-plugins-ugly
 gst-libav
 obs-studio
-imagemagick
+gimp
+krita
+inkscape
+audacity
 
 # --- Fonts ---
 ttf-dejavu
@@ -163,28 +192,18 @@ ttf-font-awesome
 firefox
 chromium
 librewolf
+zen-browser
 thunderbird
-
-# --- Utilities / Misc ---
-rsync
-file
-bat
-ripgrep
-fd
-fzf
-htop
-neofetch
-speedtest-cli
-exiftool
-jq
-yq
-tree
-btop
-
-# --- AUR / yay helper packages ---
-yay
-visual-studio-code-bin
+brave-bin
+discord
 spotify
 zoom
-discord
-brave-bin
+
+# --- Games / Entertainment ---
+steam
+
+# --- Utilities / Monitoring ---
+thermald
+tlp
+powertop
+i7z
