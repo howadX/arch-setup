@@ -1,25 +1,86 @@
 #!/bin/bash
-set -e
+set -euo pipefail
 
-echo "==> Обновление системы"
-sudo pacman -Syu --noconfirm
+PKG_FILE="packages.txt"
+LOG_FILE="install.log"
 
-echo "==> Установка пакетов из pacman"
-sudo pacman -S --needed --noconfirm $(grep -v '^#' packages.txt)
+# ----------------------------
+# Arch Linux setup script v2
+# ----------------------------
+# Usage: ./install.sh
+# Make sure you have sudo privileges
+# ----------------------------
 
-echo "==> Включение сервисов"
-sudo systemctl enable NetworkManager
-sudo systemctl enable docker
-sudo systemctl enable sshd
+echo "=== Arch Setup Script ==="
+echo "Logging to $LOG_FILE"
+echo "" > "$LOG_FILE"
 
-echo "==> Добавление пользователя в группу docker"
-sudo usermod -aG docker $USER
+if [[ ! -f "$PKG_FILE" ]]; then
+    echo "Error: $PKG_FILE not found!" | tee -a "$LOG_FILE"
+    exit 1
+fi
 
-echo "==> Установка AUR пакетов"
-yay -S --needed --noconfirm \
-  visual-studio-code-bin \
-  amnezia-vpn-bin \
-  zen-browser-bin
+PACMAN_PKGS=()
+AUR_PKGS=()
 
-echo "==> Готово!"
-echo "Перезагрузи систему и Docker будет доступен без sudo."
+# --- Split packages ---
+while IFS= read -r pkg; do
+    [[ "$pkg" =~ ^#.*$ ]] && continue
+    [[ -z "$pkg" ]] && continue
+
+    if pacman -Si "$pkg" &>/dev/null; then
+        PACMAN_PKGS+=("$pkg")
+    else
+        AUR_PKGS+=("$pkg")
+    fi
+done < "$PKG_FILE"
+
+echo "Official packages: ${#PACMAN_PKGS[@]}" | tee -a "$LOG_FILE"
+echo "AUR packages: ${#AUR_PKGS[@]}" | tee -a "$LOG_FILE"
+
+# --- System update ---
+echo "Updating system..." | tee -a "$LOG_FILE"
+sudo pacman -Syu --noconfirm >> "$LOG_FILE" 2>&1
+
+# --- Install official packages ---
+if [[ ${#PACMAN_PKGS[@]} -gt 0 ]]; then
+    echo "Installing official packages..." | tee -a "$LOG_FILE"
+    for pkg in "${PACMAN_PKGS[@]}"; do
+        if pacman -Qi "$pkg" &>/dev/null; then
+            echo "[SKIP] $pkg already installed" | tee -a "$LOG_FILE"
+        else
+            echo "[INSTALL] $pkg" | tee -a "$LOG_FILE"
+            sudo pacman -S --needed --noconfirm "$pkg" >> "$LOG_FILE" 2>&1
+        fi
+    done
+fi
+
+# --- Install yay if missing ---
+if ! command -v yay &>/dev/null; then
+    echo "yay not found. Installing yay..." | tee -a "$LOG_FILE"
+    tmpdir=$(mktemp -d)
+    git clone https://aur.archlinux.org/yay.git "$tmpdir/yay" >> "$LOG_FILE" 2>&1
+    cd "$tmpdir/yay"
+    makepkg -si --noconfirm >> "$LOG_FILE" 2>&1
+    cd -
+    rm -rf "$tmpdir"
+fi
+
+# --- Install AUR packages ---
+if [[ ${#AUR_PKGS[@]} -gt 0 ]]; then
+    echo "Installing AUR packages..." | tee -a "$LOG_FILE"
+    for pkg in "${AUR_PKGS[@]}"; do
+        if yay -Qi "$pkg" &>/dev/null; then
+            echo "[SKIP] $pkg already installed" | tee -a "$LOG_FILE"
+        else
+            echo "[INSTALL] $pkg (AUR)" | tee -a "$LOG_FILE"
+            yay -S --needed --noconfirm --devel --removemake "$pkg" >> "$LOG_FILE" 2>&1
+        fi
+    done
+fi
+
+echo ""
+echo "=== Installation complete ===" | tee -a "$LOG_FILE"
+echo "Official packages installed: ${#PACMAN_PKGS[@]}" | tee -a "$LOG_FILE"
+echo "AUR packages installed: ${#AUR_PKGS[@]}" | tee -a "$LOG_FILE"
+echo "See $LOG_FILE for detailed output."
