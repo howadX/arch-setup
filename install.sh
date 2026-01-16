@@ -3,6 +3,11 @@ set -euo pipefail
 
 PKG_FILE="packages.txt"
 
+# --- Check if running as root ---
+if [[ $EUID -eq 0 ]]; then
+    echo "Warning: Do not run this script as root. Only pacman commands use sudo internally."
+fi
+
 echo "=== Arch Setup Script ==="
 echo "Make sure you have sudo privileges"
 
@@ -29,7 +34,7 @@ done < "$PKG_FILE"
 echo "Official packages: ${#PACMAN_PKGS[@]}"
 echo "AUR packages: ${#AUR_PKGS[@]}"
 
-# --- System update ---
+# --- Update system ---
 echo "Updating system..."
 sudo pacman -Syu --noconfirm
 
@@ -52,6 +57,7 @@ if ! command -v yay &>/dev/null; then
     tmpdir=$(mktemp -d)
     git clone https://aur.archlinux.org/yay.git "$tmpdir/yay"
     cd "$tmpdir/yay"
+    # Установка yay от обычного пользователя
     makepkg -si --noconfirm
     cd -
     rm -rf "$tmpdir"
