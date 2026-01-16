@@ -93,7 +93,6 @@ code
 code-server
 kate
 kdevelop
-gvim
 alacritty
 kitty
 
