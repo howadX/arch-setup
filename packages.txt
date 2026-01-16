@@ -1,0 +1,84 @@
+# ===== Base =====
+base-devel
+linux-headers
+networkmanager
+pipewire
+pipewire-pulse
+openssh
+curl
+wget
+unzip
+zip
+
+# ===== C / C++ =====
+gcc
+clang
+lld
+cmake
+ninja
+gdb
+valgrind
+clang-tools-extra
+
+# ===== Languages =====
+dotnet-sdk
+dotnet-runtime
+go
+jdk-openjdk
+python
+python-pip
+python-virtualenv
+python-numpy
+python-scipy
+jq
+
+# ===== AI / Math =====
+openblas
+lapack
+eigen
+boost
+fmt
+spdlog
+
+# ===== Dev tools =====
+git
+github-cli
+neovim
+ripgrep
+fd
+ctags
+
+# ===== KDE =====
+plasma-meta
+dolphin
+konsole
+ark
+
+# ===== Hyprland =====
+hyprland
+waybar
+wofi
+kitty
+grim
+slurp
+wl-clipboard
+xdg-desktop-portal-hyprland
+
+# ===== Docker =====
+docker
+docker-compose
+docker-buildx
+
+# ===== Apps =====
+steam
+telegram-desktop
+discord
+obsidian
+obs-studio
+
+# ===== Utils =====
+htop
+btop
+lm_sensors
+bat
+exa
