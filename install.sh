@@ -9,7 +9,7 @@ if [[ $EUID -eq 0 ]]; then
 fi
 
 echo "=== Arch Setup Script ==="
-echo "Warning: Do not run this script as root. Only pacman commands use sudo internally."
+echo "Make sure you have sudo privileges"
 
 if [[ ! -f "$PKG_FILE" ]]; then
     echo "Error: $PKG_FILE not found!"
@@ -51,6 +51,10 @@ if [[ ${#PACMAN_PKGS[@]} -gt 0 ]]; then
     done
 fi
 
+# --- Ensure Node.js and npm are installed for Node-based AUR packages ---
+echo "Installing Node.js and npm (required for some AUR packages)..."
+sudo pacman -S --needed --noconfirm nodejs npm
+
 # --- Install yay if missing ---
 if ! command -v yay &>/dev/null; then
     echo "yay not found. Installing yay..."
@@ -71,7 +75,10 @@ if [[ ${#AUR_PKGS[@]} -gt 0 ]]; then
             echo "[SKIP] $pkg already installed"
         else
             echo "[INSTALL] $pkg (AUR)"
-            yay -S --needed --noconfirm --devel --removemake "$pkg"
+            # Очистка кеша исходников перед сборкой
+            rm -rf ~/.cache/yay/"$pkg"
+            # Установка пакета
+            yay -S --needed --noconfirm --devel --removemake --noedit "$pkg"
         fi
     done
 fi
