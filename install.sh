@@ -51,10 +51,6 @@ if [[ ${#PACMAN_PKGS[@]} -gt 0 ]]; then
     done
 fi
 
-# --- Ensure Node.js and npm are installed for Node-based AUR packages ---
-echo "Installing Node.js and npm (required for some AUR packages)..."
-sudo pacman -S --needed --noconfirm nodejs npm
-
 # --- Install yay if missing ---
 if ! command -v yay &>/dev/null; then
     echo "yay not found. Installing yay..."
@@ -75,10 +71,7 @@ if [[ ${#AUR_PKGS[@]} -gt 0 ]]; then
             echo "[SKIP] $pkg already installed"
         else
             echo "[INSTALL] $pkg (AUR)"
-            # Очистка кеша исходников перед сборкой
-            rm -rf ~/.cache/yay/"$pkg"
-            # Установка пакета
-            yay -S --needed --noconfirm --devel --removemake --noedit "$pkg"
+            yay -S --needed --noconfirm --devel --removemake "$pkg"
         fi
     done
 fi
