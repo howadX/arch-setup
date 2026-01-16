@@ -36,8 +36,6 @@ btop
 exiftool
 
 # --- Networking / System ---
-NetworkManager
-network-manager-applet
 net-tools
 iproute2
 openssh
