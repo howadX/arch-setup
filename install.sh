@@ -9,7 +9,7 @@ if [[ $EUID -eq 0 ]]; then
 fi
 
 echo "=== Arch Setup Script ==="
-echo "Make sure you have sudo privileges"
+echo "Warning: Do not run this script as root. Only pacman commands use sudo internally."
 
 if [[ ! -f "$PKG_FILE" ]]; then
     echo "Error: $PKG_FILE not found!"
