@@ -186,11 +186,11 @@ ttf-font-awesome
 
 # --- Browsers / Internet ---
 firefox
-chromium
-librewolf
+#chromium
+#librewolf
 zen-browser
 thunderbird
-brave-bin
+#brave-bin
 discord
 spotify
 zoom
