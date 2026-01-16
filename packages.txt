@@ -1,84 +1,190 @@
-# ===== Base =====
-base-devel
-linux-headers
-networkmanager
-pipewire
-pipewire-pulse
-openssh
-curl
+# --- Core / Base Utilities ---
+bash
+coreutils
+git
+vim
+nano
+htop
 wget
+curl
 unzip
 zip
+tar
+gzip
+bzip2
+xz
+p7zip
+sudo
+man-db
+man-pages
+which
+rsync
+screen
+tmux
+unrar
 
-# ===== C / C++ =====
+# --- Networking / System ---
+NetworkManager
+network-manager-applet
+net-tools
+iproute2
+openssh
+nmap
+wireguard-tools
+resolvconf
+
+# --- Disk / File Systems ---
+btrfs-progs
+dosfstools
+exfat-utils
+ntfs-3g
+gvfs
+udisks2
+
+# --- Development Tools ---
+base-devel
 gcc
 clang
-lld
+make
 cmake
 ninja
+pkgconf
 gdb
+strace
 valgrind
-clang-tools-extra
+lsof
+ctags
+lldb
+cmake-gui
+python-pip
+python-virtualenv
 
-# ===== Languages =====
-dotnet-sdk
-dotnet-runtime
-go
-jdk-openjdk
+# --- Languages ---
 python
 python-pip
 python-virtualenv
-python-numpy
-python-scipy
-jq
+python-wheel
+python-setuptools
+go
+golang-tools
+openjdk
+openjdk-doc
+mono
+dotnet-sdk
 
-# ===== AI / Math =====
+# --- Editors / IDEs ---
+neovim
+code
+code-server
+kate
+kdevelop
+gvim
+
+# --- C++ / AI / Math Libraries ---
+eigen
 openblas
 lapack
-eigen
+armadillo
 boost
-fmt
-spdlog
+fftw
+opencv
+tbb
+cuda
+cudnn
 
-# ===== Dev tools =====
-git
-github-cli
-neovim
-ripgrep
-fd
-ctags
+# --- Containers / Virtualization ---
+docker
+docker-compose
+podman
+podman-compose
+qemu
+virt-manager
+libvirt
+vde2
+bridge-utils
+virt-viewer
 
-# ===== KDE =====
-plasma-meta
-dolphin
-konsole
-ark
-
-# ===== Hyprland =====
+# --- Graphics / Wayland / KDE ---
+plasma
+plasma-wayland-session
+kde-applications
+sddm
+sddm-kcm
+wayland
+xorg-xwayland
 hyprland
-waybar
-wofi
-kitty
 grim
 slurp
 wl-clipboard
-xdg-desktop-portal-hyprland
+wdisplays
+khotkeys
+kdeconnect
 
-# ===== Docker =====
-docker
-docker-compose
-docker-buildx
+# --- NVIDIA Drivers ---
+nvidia
+nvidia-utils
+nvidia-settings
+nvidia-dkms
+libvdpau
+libva-vdpau-driver
+vulkan-icd-loader
+vulkan-tools
+vulkan-validation-layers
 
-# ===== Apps =====
-steam
-telegram-desktop
-discord
-obsidian
+# --- Audio / Video / Media ---
+pipewire
+pipewire-alsa
+pipewire-pulse
+pipewire-jack
+wireplumber
+alsa-utils
+pavucontrol
+mpv
+vlc
+ffmpeg
+gstreamer
+gst-plugins-good
+gst-plugins-bad
+gst-plugins-ugly
+gst-libav
 obs-studio
+imagemagick
 
-# ===== Utils =====
-htop
-btop
-lm_sensors
+# --- Fonts ---
+ttf-dejavu
+ttf-liberation
+ttf-roboto
+noto-fonts
+noto-fonts-cjk
+noto-fonts-emoji
+ttf-font-awesome
+
+# --- Browsers / Internet ---
+firefox
+chromium
+librewolf
+thunderbird
+
+# --- Utilities / Misc ---
+rsync
+file
 bat
-exa
+ripgrep
+fd
+fzf
+htop
+neofetch
+speedtest-cli
+exiftool
+jq
+yq
+tree
+btop
+
+# --- AUR / yay helper packages ---
+yay
+visual-studio-code-bin
+spotify
+zoom
+discord
+brave-bin
