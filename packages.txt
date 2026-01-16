@@ -121,7 +121,7 @@ kubectl
 minikube
 helm
 terraform
-insomnia
+#insomnia
 
 # --- Graphics / Wayland / KDE ---
 plasma
