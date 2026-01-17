@@ -66,6 +66,18 @@ log_info "Preparing scalable, minimal, and visually unified desktop environment"
 log_info "Updating system..."
 sudo pacman -Syu --noconfirm
 
+package_exists_repo() {
+    pacman -Si "$1" &>/dev/null
+}
+
+package_exists_aur() {
+    yay -Si "$1" &>/dev/null
+}
+
+package_installed() {
+    pacman -Qi "$1" &>/dev/null || yay -Qi "$1" &>/dev/null
+}
+
 # Wayland stack
 log_info "Installing Wayland stack..."
 WAYLAND_PKGS=(
@@ -151,20 +163,34 @@ THEME_PKGS=(
 install_packages() {
     local -n packages=$1
     local category=$2
-    
+
     for pkg in "${packages[@]}"; do
-        if pacman -Qi "$pkg" &>/dev/null 2>&1 || yay -Qi "$pkg" &>/dev/null 2>&1; then
+        
+        # Already installed
+        if package_installed "$pkg"; then
             log_info "[SKIP] $pkg already installed"
-        else
-            log_info "[INSTALL] $pkg ($category)"
-            if pacman -Si "$pkg" &>/dev/null 2>&1; then
-                sudo pacman -S --needed --noconfirm "$pkg"
-            else
-                yay -S --needed --noconfirm --devel --removemake "$pkg"
-            fi
+            continue
         fi
+
+        # Official repo package
+        if package_exists_repo "$pkg"; then
+            log_info "[INSTALL] $pkg (repo → $category)"
+            sudo pacman -S --needed --noconfirm "$pkg"
+            continue
+        fi
+
+        # AUR package
+        if package_exists_aur "$pkg"; then
+            log_info "[INSTALL] $pkg (AUR → $category)"
+            yay -S --needed --noconfirm --devel --removemake "$pkg"
+            continue
+        fi
+
+        # Missing package
+        log_warn "[MISSING] $pkg not found (skipped)"
     done
 }
+
 
 # Install all package groups
 install_packages WAYLAND_PKGS "Wayland stack"
