@@ -22,6 +22,20 @@ YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
+LOG_FILE="$USER_HOME/arch-setup.log"
+DRY_RUN=0
+
+# Parse arguments
+for arg in "$@"; do
+    case $arg in
+        --check) DRY_RUN=1 ;;
+    esac
+done
+
+# Redirect all output to log file
+exec > >(tee -a "$LOG_FILE") 2>&1
+log_info "Arch setup started at $(date)"
+
 log_info() {
     echo -e "${BLUE}[INFO]${NC} $1"
 }
@@ -36,6 +50,36 @@ log_warn() {
 
 log_error() {
     echo -e "${RED}[ERROR]${NC} $1"
+}
+
+check_dependencies() {
+    local pkg=$1
+    if ! pacman -Si "$pkg" &>/dev/null; then
+        return
+    fi
+    local deps
+    deps=$(pacman -Si "$pkg" | grep "Depends On" | sed 's/Depends On *://')
+    if [[ -n "$deps" ]]; then
+        log_info "$pkg depends on: $deps"
+    fi
+}
+
+package_exists_repo() { pacman -Si "$1" &>/dev/null; }
+package_exists_aur() { yay -Si "$1" &>/dev/null; }
+package_installed() { pacman -Qi "$1" &>/dev/null || yay -Qi "$1" &>/dev/null; }
+
+retry() {
+    local n=0 max=2 delay=5
+    until "$@"; do
+        n=$((n+1))
+        if [[ $n -le $max ]]; then
+            log_warn "Command failed, retry $n/$max in $delay seconds..."
+            sleep $delay
+        else
+            log_error "Command failed after $max attempts: $*"
+            return 1
+        fi
+    done
 }
 
 # Check if running as root
@@ -78,6 +122,11 @@ package_installed() {
     pacman -Qi "$1" &>/dev/null || yay -Qi "$1" &>/dev/null
 }
 
+declare -A PACKAGE_ALIASES=(
+    ["plasma-wayland-session"]="plasma-workspace"
+    ["pipewire-media-session"]="wireplumber"
+)
+
 # Wayland stack
 log_info "Installing Wayland stack..."
 WAYLAND_PKGS=(
@@ -93,6 +142,15 @@ WAYLAND_PKGS=(
 )
 
 # Desktop environments
+detect_plasma() {
+    if package_exists_repo "plasma"; then
+        PLASMA_VERSION=$(pacman -Si plasma | grep Version | awk '{print $2}')
+        log_info "Detected Plasma version: $PLASMA_VERSION"
+    else
+        log_warn "Plasma package not found"
+    fi
+}
+detect_plasma
 log_info "Installing desktop environments..."
 DE_PKGS=(
     "plasma"
@@ -185,6 +243,14 @@ install_packages() {
             yay -S --needed --noconfirm --devel --removemake "$pkg"
             continue
         fi
+
+        if [[ -n "${PACKAGE_ALIASES[$pkg]:-}" ]]; then
+            log_warn "Package $pkg renamed → ${PACKAGE_ALIASES[$pkg]}"
+            pkg="${PACKAGE_ALIASES[$pkg]}"
+        fi
+
+        # Проверка зависимостей
+        check_dependencies "$pkg"
 
         # Missing package
         log_warn "[MISSING] $pkg not found (skipped)"
@@ -919,6 +985,12 @@ fi
 systemctl --user enable pipewire pipewire-pulse wireplumber 2>/dev/null || log_warn "PipeWire user services may need manual enable"
 
 log_success "Services configured"
+if [[ ${#MISSING_PACKAGES[@]} -gt 0 ]]; then
+    log_warn "Rollback: some packages were missing or failed to install"
+    for pkg in "${MISSING_PACKAGES[@]}"; do
+        log_info "Skipped package: $pkg"
+    done
+fi
 
 # ============================================================================
 # Summary
