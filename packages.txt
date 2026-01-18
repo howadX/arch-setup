@@ -75,6 +75,7 @@ python-pip
 python-virtualenv
 python-wheel
 python-setuptools
+nlohmann-json
 
 # --- Languages ---
 python
