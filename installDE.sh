@@ -273,7 +273,6 @@ log_info "Configuring KDE Plasma visual theme..."
 
 KDE_CONFIG_DIR="$CONFIG_DIR"
 mkdir -p "$KDE_CONFIG_DIR/kvantum"
-mkdir -p "$KDE_CONFIG_DIR/kdeglobals"
 
 # Download and configure Catppuccin Mocha theme for KDE
 log_info "Setting up Catppuccin Mocha theme for KDE..."
@@ -297,6 +296,12 @@ if [[ ! -d "$KVANTUM_THEME_DIR/Catppuccin-Mocha" ]] || [[ -z "$(ls -A "$KVANTUM_
 fi
 
 # KDE Global Settings (visual only - no hotkeys or workflows)
+# Safety check
+if [[ -d "$KDE_CONFIG_DIR/kdeglobals" ]]; then
+    log_warn "kdeglobals exists as directory, removing"
+    rm -rf "$KDE_CONFIG_DIR/kdeglobals"
+fi
+
 cat > "$KDE_CONFIG_DIR/kdeglobals" << 'EOF'
 [General]
 ColorScheme=CatppuccinMocha
