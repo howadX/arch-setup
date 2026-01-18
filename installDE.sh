@@ -144,7 +144,6 @@ USER_APPS=(
     "discord"
     "steam"
     "obsidian"
-    "zen-browser"
     "amnezia-vpn"
 )
 
