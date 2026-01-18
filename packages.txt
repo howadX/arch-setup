@@ -140,7 +140,6 @@ khotkeys
 kdeconnect
 rofi
 dmenu
-cursor
 
 # --- NVIDIA Drivers ---
 #nvidia
@@ -188,11 +187,11 @@ ttf-font-awesome
 firefox
 #chromium
 #librewolf
-zen-browser
+#zen-browser
 thunderbird
 #brave-bin
 discord
-spotify
+#spotify
 zoom
 
 # --- Games / Entertainment ---
